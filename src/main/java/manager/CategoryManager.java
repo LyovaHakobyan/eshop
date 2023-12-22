@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryManager {
+    private final Connection connection = DBConnectionProvider.getInstance().getConnection();
+
     public void addCategory(Category category) throws SQLException {
         String order = "INSERT INTO category (name) VALUES (?)";
-        Connection connection = DBConnectionProvider.getInstance().getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(order, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, category.getName());
             preparedStatement.executeUpdate();
@@ -23,7 +24,6 @@ public class CategoryManager {
 
     public Category getCategoryById(int id) throws SQLException {
         String order = "SELECT * FROM category WHERE id = " + id;
-        Connection connection = DBConnectionProvider.getInstance().getConnection();
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(order);
             if (resultSet.next()) {
@@ -38,7 +38,6 @@ public class CategoryManager {
     public void editCategoryById(int id, String newName) throws SQLException {
         if (getCategoryById(id) != null) {
             String order = "UPDATE category SET name = ? WHERE id = " + id;
-            Connection connection = DBConnectionProvider.getInstance().getConnection();
             try (PreparedStatement preparedStatement = connection.prepareStatement(order)) {
                 preparedStatement.setString(1, newName);
                 preparedStatement.executeUpdate();
@@ -51,7 +50,6 @@ public class CategoryManager {
     public void deleteCategoryById(int id) throws SQLException {
         if (getCategoryById(id) != null) {
             String order = "DELETE FROM category WHERE id = " + id;
-            Connection connection = DBConnectionProvider.getInstance().getConnection();
             try (PreparedStatement preparedStatement = connection.prepareStatement(order)) {
                 preparedStatement.executeUpdate();
             }
@@ -63,7 +61,6 @@ public class CategoryManager {
     public List<Category> getAllCategories() throws SQLException {
         List<Category> categories = new ArrayList<>();
         String order = "SELECT * FROM category";
-        Connection connection = DBConnectionProvider.getInstance().getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(order)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
