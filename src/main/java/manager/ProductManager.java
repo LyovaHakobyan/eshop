@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductManager {
-    public static void addProduct(Product product) throws SQLException {
+    private final CategoryManager categoryManager = new CategoryManager();
+
+    public void addProduct(Product product) throws SQLException {
         String order = "INSERT INTO product (name,description,price,quantity,category_id) VALUES (?,?,?,?,?)";
         Connection connection = DBConnectionProvider.getInstance().getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(order, Statement.RETURN_GENERATED_KEYS)) {
@@ -26,7 +28,7 @@ public class ProductManager {
         }
     }
 
-    public static Product getProductById(int id) throws SQLException {
+    public Product getProductById(int id) throws SQLException {
         String order = "SELECT * FROM product WHERE id = " + id;
         Connection connection = DBConnectionProvider.getInstance().getConnection();
         try (Statement statement = connection.createStatement()) {
@@ -38,14 +40,14 @@ public class ProductManager {
                 double price = resultSet.getDouble("price");
                 int qty = resultSet.getInt("quantity");
                 int categoryId = resultSet.getInt("category_id");
-                Category categoryById = CategoryManager.getCategoryById(categoryId);
+                Category categoryById = categoryManager.getCategoryById(categoryId);
                 return new Product(anInt, name, description, price, qty, categoryById);
             }
         }
         return null;
     }
 
-    public static void editProductById(int id, String name, String description, double price, int qty, int category_id) throws SQLException {
+    public void editProductById(int id, String name, String description, double price, int qty, int category_id) throws SQLException {
         if (getProductById(id) != null) {
             String order = "UPDATE product SET name = ?, description = ?, price = ?, quantity = ?, category_id = ? WHERE id = " + id;
             Connection connection = DBConnectionProvider.getInstance().getConnection();
@@ -62,7 +64,7 @@ public class ProductManager {
         }
     }
 
-    public static void deleteProductById(int id) throws SQLException {
+    public void deleteProductById(int id) throws SQLException {
         if (getProductById(id) != null) {
             String order = "DELETE FROM product WHERE id = " + id;
             Connection connection = DBConnectionProvider.getInstance().getConnection();
@@ -74,7 +76,7 @@ public class ProductManager {
         }
     }
 
-    public static List<Product> getAllProducts() throws SQLException {
+    public List<Product> getAllProducts() throws SQLException {
         List<Product> products = new ArrayList<>();
         String order = "SELECT * FROM product";
         Connection connection = DBConnectionProvider.getInstance().getConnection();
@@ -87,14 +89,14 @@ public class ProductManager {
                 double price = resultSet.getDouble("price");
                 int qty = resultSet.getInt("quantity");
                 int category_id = resultSet.getInt("category_id");
-                Category category = CategoryManager.getCategoryById(category_id);
+                Category category = categoryManager.getCategoryById(category_id);
                 products.add(new Product(id, name, description, price, qty, category));
             }
             return products;
         }
     }
 
-    public static int getSumOfProducts() throws SQLException {
+    public int getSumOfProducts() throws SQLException {
         String order = "SELECT COUNT(id) AS product_count FROM product";
         Connection connection = DBConnectionProvider.getInstance().getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(order)) {
@@ -104,7 +106,7 @@ public class ProductManager {
         }
     }
 
-    public static double getMaxPriceOfProduct() throws SQLException {
+    public double getMaxPriceOfProduct() throws SQLException {
         String order = "SELECT MAX(price) AS product_max_price FROM product";
         Connection connection = DBConnectionProvider.getInstance().getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(order)) {
@@ -114,7 +116,7 @@ public class ProductManager {
         }
     }
 
-    public static double getMinPriceOfProduct() throws SQLException {
+    public double getMinPriceOfProduct() throws SQLException {
         String order = "SELECT MIN(price) AS product_min_price FROM product";
         Connection connection = DBConnectionProvider.getInstance().getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(order)) {
@@ -124,7 +126,7 @@ public class ProductManager {
         }
     }
 
-    public static double getAveragePriceOfProduct() throws SQLException {
+    public double getAveragePriceOfProduct() throws SQLException {
         String order = "SELECT AVG(price) AS product_average_price FROM product";
         Connection connection = DBConnectionProvider.getInstance().getConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(order)) {

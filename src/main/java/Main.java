@@ -13,6 +13,8 @@ import static util.Commands.*;
 
 public class Main {
     private static final Scanner SCANNER = new Scanner(System.in);
+    private static final ProductManager PRODUCT_MANAGER = new ProductManager();
+    private static final CategoryManager CATEGORY_MANAGER = new CategoryManager();
 
     public static void main(String[] args) {
         boolean process = true;
@@ -65,7 +67,7 @@ public class Main {
         System.out.println("Name...");
         String newCategoryName = SCANNER.nextLine();
         try {
-            CategoryManager.addCategory(new Category(newCategoryName));
+            CATEGORY_MANAGER.addCategory(new Category(newCategoryName));
         } catch (SQLException e) {
             System.out.println("-- Error: category by this name already exists! --");
             return;
@@ -87,7 +89,7 @@ public class Main {
         System.out.println("New name...");
         String newName = SCANNER.nextLine();
         try {
-            CategoryManager.editCategoryById(id, newName);
+            CATEGORY_MANAGER.editCategoryById(id, newName);
         } catch (SQLException e) {
             System.out.println("-- Error: category by this id doesnt exist --");
             return;
@@ -107,7 +109,7 @@ public class Main {
             return;
         }
         try {
-            CategoryManager.deleteCategoryById(id);
+            CATEGORY_MANAGER.deleteCategoryById(id);
         } catch (SQLException e) {
             System.out.println("-- Error: category by this id doesnt exist --");
             return;
@@ -154,7 +156,7 @@ public class Main {
         }
         Category category;
         try {
-            if ((category = CategoryManager.getCategoryById(categoryId)) == null) {
+            if ((category = CATEGORY_MANAGER.getCategoryById(categoryId)) == null) {
                 System.out.println("-- Error: category by this id doesnt exist --");
                 return;
             }
@@ -163,7 +165,7 @@ public class Main {
             return;
         }
         try {
-            ProductManager.addProduct(new Product(name, description, price, qty, category));
+            PRODUCT_MANAGER.addProduct(new Product(name, description, price, qty, category));
         } catch (SQLException e) {
             System.out.println("-- Error: connection is failed --");
             return;
@@ -183,7 +185,7 @@ public class Main {
             return;
         }
         try {
-            if (ProductManager.getProductById(id) == null) {
+            if (PRODUCT_MANAGER.getProductById(id) == null) {
                 System.out.println("-- Error: product by this id doest exist --");
                 return;
             }
@@ -227,7 +229,7 @@ public class Main {
             return;
         }
         try {
-            if (CategoryManager.getCategoryById(categoryId) == null) {
+            if (CATEGORY_MANAGER.getCategoryById(categoryId) == null) {
                 System.out.println("-- Error: category by this id doest exist --");
                 return;
             }
@@ -235,7 +237,7 @@ public class Main {
             System.out.println("-- Wrong id --");
         }
         try {
-            ProductManager.editProductById(id, name, description, price, qty, categoryId);
+            PRODUCT_MANAGER.editProductById(id, name, description, price, qty, categoryId);
         } catch (SQLException e) {
             System.out.println("-- Error: connection is failed --");
         }
@@ -254,7 +256,7 @@ public class Main {
             return;
         }
         try {
-            ProductManager.deleteProductById(id);
+            PRODUCT_MANAGER.deleteProductById(id);
         } catch (SQLException e) {
             System.out.println("-- Error: product by this id doest exist --");
             return;
@@ -266,7 +268,7 @@ public class Main {
         System.out.println("The sum of products is...");
         int sumOfProducts;
         try {
-            sumOfProducts = ProductManager.getSumOfProducts();
+            sumOfProducts = PRODUCT_MANAGER.getSumOfProducts();
         } catch (SQLException e) {
             System.out.println("-- Error: connection is failed --");
             return;
@@ -278,7 +280,7 @@ public class Main {
         System.out.println("The max price of products is...");
         double maxPrice;
         try {
-            maxPrice = ProductManager.getMaxPriceOfProduct();
+            maxPrice = PRODUCT_MANAGER.getMaxPriceOfProduct();
         } catch (SQLException e) {
             System.out.println("-- Error: connection is failed --");
             return;
@@ -290,7 +292,7 @@ public class Main {
         System.out.println("The min price of products is...");
         double minPrice;
         try {
-            minPrice = ProductManager.getMinPriceOfProduct();
+            minPrice = PRODUCT_MANAGER.getMinPriceOfProduct();
         } catch (SQLException e) {
             System.out.println("-- Error: connection is failed --");
             return;
@@ -302,7 +304,7 @@ public class Main {
         System.out.println("The average price of products is...");
         double averagePrice;
         try {
-            averagePrice = ProductManager.getAveragePriceOfProduct();
+            averagePrice = PRODUCT_MANAGER.getAveragePriceOfProduct();
         } catch (SQLException e) {
             System.out.println("-- Error: connection is failed --");
             return;
@@ -312,7 +314,7 @@ public class Main {
 
     private static void printAllProducts() {
         try {
-            List<Product> allProducts = ProductManager.getAllProducts();
+            List<Product> allProducts = PRODUCT_MANAGER.getAllProducts();
             for (Product product : allProducts) {
                 System.out.println(product);
             }
@@ -323,7 +325,7 @@ public class Main {
 
     private static void printAllCategories() {
         try {
-            List<Category> allCategories = CategoryManager.getAllCategories();
+            List<Category> allCategories = CATEGORY_MANAGER.getAllCategories();
             for (Category allCategory : allCategories) {
                 System.out.println(allCategory);
             }
